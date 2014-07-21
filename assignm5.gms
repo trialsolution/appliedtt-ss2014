@@ -104,7 +104,7 @@ variable
 ;
 
 prod_func(goods, countries)  ..
-                     Q(goods, countries) =e= A(goods, "const") * prod(factors, FUSE(goods, factors, countries)**a(goods, factors));
+                     Q(goods, countries) =e= a(goods, "const") * prod(factors, FUSE(goods, factors, countries)**a(goods, factors));
 
 resource_const(factors, countries) ..
                      sum(goods, FUSE(goods, factors, countries)) =e= endowments(factors, countries);
@@ -266,6 +266,99 @@ Similarly, country B will specialize in the produciton of cars.
 K                   1.000
 L       1.000
 $offtext
+
+
+
+
+*
+*   ---  Exercise e) Let's set up the open economy model
+*                    and verify the H-O theorem
+*
+
+
+*
+*   ---  Optimal consumption bundle departs from optimal production set
+*        => introduce consumption-related variables/equations
+*
+
+positive variable C(goods,countries) "consumption";
+equation SIC2(countries);
+
+SIC2(countries) ..
+                     U(countries)       =e= prod(goods, C(goods, countries) ** 0.5);
+
+
+
+*
+*   --- Let's add budget constraints under fix world prices
+*
+
+parameter pw(goods)  "world prices";
+pw(goods) = 3;
+
+equation budget_const(countries)  "budget constraints";
+equation resource_const2(factors, countries);
+
+budget_const(countries) ..
+                     sum(goods, Q(goods, countries) * pw(goods)) =e= sum(goods, C(goods, countries) * pw(goods));
+
+resource_const2(factors, countries) ..
+                     sum(goods, FUSE(goods, factors, countries)) =l= endowments(factors, countries);
+
+
+
+model free_trade /SIC2, tot_utility, budget_const, prod_func, resource_const2/;
+
+C.l(goods,countries)=1;
+
+solve free_trade using NLP maximizing totU;
+
+parameter net_trade(goods, countries) "net trade";
+
+net_trade(goods,countries) = Q.l(goods, countries) - C.l(goods, countries);
+
+display net_trade;
+
+
+
+
+$ontext
+
+Country A will really export potatoes, while country B cars.
+
+----    320 PARAMETER net_trade  net trade
+
+            A           B
+
+P      33.930     -33.930
+C     -33.930      33.930
+
+
+Note that factor prices (equation marginals) are identical in the two countries.
+That's the factor price equalization theorem in action:
+
+---- EQU resource_const2
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+K.A        -INF            5.0000         5.0000         2.7144
+K.B        -INF           10.0000        10.0000         2.7144
+L.A        -INF           10.0000        10.0000         2.7144
+L.B        -INF            5.0000         5.0000         2.7144
+
+That's a very important result indeed. Remember that factors were not mobile
+across countries, only between industries. Nevertheless, free trade equalized
+wages and capital earnings. It's sometimes mentioned as free trade 'integrates' economies.
+
+
+
+$offtext
+
+
+
+
+
+
 
 *============================   End Of File   ================================
 
