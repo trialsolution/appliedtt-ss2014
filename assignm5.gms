@@ -349,7 +349,8 @@ L.B        -INF            5.0000         5.0000         2.7144
 That's a very important result indeed. Remember that factors were not mobile
 across countries, only between industries. Nevertheless, free trade equalized
 wages and capital earnings. It's sometimes mentioned as free trade 'integrates' economies.
-
+A direct implication is an income re-distribution within countries to the abundant
+factor.
 
 
 $offtext
